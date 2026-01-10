@@ -1,5 +1,4 @@
 from flask import Flask, render_template_string
-import os
 
 app = Flask(__name__)
 
@@ -964,15 +963,15 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 and real-time dashboards for business operations.
             </p>
             <ul style="margin-top: 10px; color: #555;">
-                <li>Built and maintained automation pipelines integrating APIs, databases, and messaging platforms</li>
-                <li>Implemented real-time monitoring and human-in-the-loop escalation systems</li>
-                <li>Worked with real client data and production constraints</li>
+                <li>Developed an AI-driven system for sales teams, automating lead qualification, meeting scheduling, and follow-ups, with integrated time zone intelligence and regional routing.</li>
+                <li>Built an open-source proposal generator that automates professional proposal creation with dynamic templates, integrating Google Cloud for deployment and document generation.</li>
+                <li>Worked with real client data, maintained automation pipelines, implemented real-time monitoring, and handled production constraints.</li>
             </ul>
         </div>
 
         <div class="project-card">
             <div class="project-header">
-                <h3>Backend / Data Intern — LIA Infraservices</h3>
+                <h3>Full Stack Developer Intern  — LIA Infraservices</h3>
                 <span class="project-date">Feb 2023 – Apr 2023</span>
             </div>
             <p>
@@ -1956,6 +1955,5 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 def home():
     return render_template_string(template)
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    app.run(debug=True)
