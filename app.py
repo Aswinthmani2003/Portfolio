@@ -1,5 +1,4 @@
 from flask import Flask, render_template_string
-import os
 
 app = Flask(__name__)
 
@@ -1253,6 +1252,10 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <img  src="{{ url_for('static', filename='images/my_pov.jpg') }}"  alt="AMI Dashboard" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
                         <div class="screenshot-caption">Real-time operations dashboard enabling human takeover, conversation monitoring, and document delivery for a production WhatsApp Cloud API financial assistant.</div>
                     </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img  src="{{ url_for('static', filename='images/my_pov1.png') }}"  alt="AMI Dashboard" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Custom WhatsApp Cloud API dashboard delivering real-time SIP details to clients using CRM-integrated data.</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1956,6 +1959,5 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 def home():
     return render_template_string(template)
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    app.run(debug=True)
