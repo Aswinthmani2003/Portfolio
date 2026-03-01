@@ -803,7 +803,7 @@ template = """
             <div class="hero">
             <img src="{{ url_for('static', filename='images/profile.png') }}"  alt="Aswinthmani V" class="profile-photo"/>
                 <h1>Aswinthmani V</h1>
-                <p class="title">AI & Automation Engineer (Finance-Focused)</p>
+                <p class="title">AI & Automation Engineer | FinTech & Backend Systems</p>
 <p class="tagline">
 Building production-grade AI and automation systems for real-world financial workflows,
 from WhatsApp Cloud APIs to CRM-driven decision pipelines.
@@ -848,13 +848,14 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <div class="about-content">
                     <div class="about-text">
                         <p>
-                            Hello! I'm Aswinthmani V, an AI & Data Science enthusiast currently pursuing my B.Tech in Artificial 
-                            Intelligence and Data Analytics at Sri Ramachandra Institute of Higher Education and Research, Chennai.
+                            I am an Associate Software Developer at Solartis LLC, working on AI-driven solutions and scalable backend systems for enterprise applications.
                         </p>
                         <p>
-                            My journey in technology is driven by curiosity and a passion for automation. I believe in learning by 
-                            building, which is why I've worked on diverse projects ranging from facial authentication systems to 
-                            AI-powered chatbots for financial services.
+                            My work focuses on automation, API integrations, and production-grade systems that support real-world business workflows.
+                            I specialize in backend development, AI-assisted decision systems, and building reliable data-driven applications.
+                        </p>
+                        <p>
+                            I am particularly interested in AI engineering, automation systems, and backend architecture, where intelligent systems improve operational efficiency and decision-making at scale.
                         </p>
                     </div>
                     <div class="about-highlights">
@@ -955,6 +956,38 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
         <div class="project-card">
             <div class="project-header">
+                <h3>Associate Software Engineer — Solartis LLC</h3>
+                <span class="project-date">Feb 2026 – Present</span>
+            </div>
+            <p>
+                Working on AI-driven automation solutions and intelligent workflow systems for enterprise applications, with a focus on integrating AI capabilities into existing business processes.
+            </p>
+            <ul style="margin-top: 10px; color: #555;">
+                <li>Developing and implementing AI-powered automation solutions to streamline complex business workflows and improve operational efficiency</li>
+                <li>Building intelligent systems that integrate AI layers with existing enterprise applications using n8n workflow automation</li>
+                <li>Working with cutting-edge AI tools including Claude Code for advanced code generation and RAG (Retrieval-Augmented Generation) systems for enhanced AI responses</li>
+                <li>Designing and deploying scalable automation pipelines that leverage AI capabilities to reduce manual intervention and accelerate business processes</li>
+                <li>Collaborating on production-grade systems that combine traditional backend development with modern AI/ML technologies</li>
+            </ul>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <h3>Associate Software Engineer Intern — Solartis LLC</h3>
+                <span class="project-date">Aug 2025 – Jan 2026</span>
+            </div>
+            <p>
+                Contributed to automation infrastructure and AI integration projects, gaining hands-on experience with enterprise-scale workflow automation and intelligent system design.
+            </p>
+            <ul style="margin-top: 10px; color: #555;">
+                <li>Assisted in developing automation workflows using n8n and integrating AI capabilities into business processes</li>
+                <li>Gained practical experience with RAG systems and AI-assisted development tools like Claude Code</li>
+                <li>Worked on improving existing automation pipelines and identifying opportunities for AI enhancement</li>
+            </ul>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
                 <h3>AIML / Automation Intern — App Synergies</h3>
                 <span class="project-date">Feb 2025 – Jul 2025</span>
             </div>
@@ -963,15 +996,15 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 and real-time dashboards for business operations.
             </p>
             <ul style="margin-top: 10px; color: #555;">
-                <li>Developed an AI-driven system for sales teams, automating lead qualification, meeting scheduling, and follow-ups, with integrated time zone intelligence and regional routing.</li>
-                <li>Built an open-source proposal generator that automates professional proposal creation with dynamic templates, integrating Google Cloud for deployment and document generation.</li>
-                <li>Worked with real client data, maintained automation pipelines, implemented real-time monitoring, and handled production constraints.</li>
+                <li>Developed an AI-driven system for sales teams, automating lead qualification, meeting scheduling, and follow-ups, with integrated time zone intelligence and regional routing</li>
+                <li>Built an open-source proposal generator that automates professional proposal creation with dynamic templates, integrating Google Cloud for deployment and document generation</li>
+                <li>Worked with real client data, maintained automation pipelines, implemented real-time monitoring, and handled production constraints</li>
             </ul>
         </div>
 
         <div class="project-card">
             <div class="project-header">
-                <h3>Full Stack Developer Intern  — LIA Infraservices</h3>
+                <h3>Full Stack Developer Intern — LIA Infraservices</h3>
                 <span class="project-date">Feb 2023 – Apr 2023</span>
             </div>
             <p>
