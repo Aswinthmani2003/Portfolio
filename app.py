@@ -199,7 +199,26 @@ template = """
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-        
+
+        .cert-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            padding: 7px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .cert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
         /* Section Styling */
         .section {
             background: white;
@@ -922,28 +941,32 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <h2>Certifications</h2>
                 <div class="skills-grid">
                     <div class="skill-card">
-                        <h3>☁️ AWS ML Foundations</h3>
+                        <h3>📜 NISM Mutual Fund Distributors Certification</h3>
                         <p style="color: #555; margin-top: 10px;">
-                            Comprehensive understanding of machine learning fundamentals and AWS ML services
+                            Certified by the National Institute of Securities Markets (NISM) in Mutual Fund Distribution — Issued Feb 2026, Valid through Feb 2029
                         </p>
+                        <a href="/static/certificates/Mutual%20Fund%20Distributors%20Certification%20Examination.pdf" target="_blank" class="cert-btn">📄 View Certificate</a>
                     </div>
                     <div class="skill-card">
-                        <h3>🤖 Generative AI</h3>
+                        <h3>☁️ Oracle Cloud Infrastructure 2025 Certified Foundations Associate</h3>
                         <p style="color: #555; margin-top: 10px;">
-                            Advanced concepts in generative AI and large language models
+                            Foundational knowledge of Oracle Cloud Infrastructure services, core concepts, and cloud computing fundamentals
                         </p>
+                        <a href="/static/certificates/Oracle%20Cloud%20Infrastructure%202025%20Certified%20Foundations%20Associate.pdf" target="_blank" class="cert-btn">📄 View Certificate</a>
                     </div>
                     <div class="skill-card">
                         <h3>☁️ Oracle AI Vector Search Certified Professional</h3>
                         <p style="color: #555; margin-top: 10px;">
                             Expertise in vector databases, similarity search, embeddings, and AI-powered semantic retrieval using Oracle AI Vector Search
                         </p>
+                        <a href="/static/certificates/Oracle%20AI%20Vector%20Search%20Certified%20Professional.pdf" target="_blank" class="cert-btn">📄 View Certificate</a>
                     </div>
                     <div class="skill-card">
                         <h3>☁️ Oracle Cloud Infrastructure (OCI) 2025 – AI Foundations Associate</h3>
                         <p style="color: #555; margin-top: 10px;">
                             Strong foundation in AI concepts, OCI services, model lifecycle, and enterprise AI deployment fundamentals
                         </p>
+                        <a href="/static/certificates/Oracle%20Cloud%20Infrastructure%202025%20Certified%20AI%20Foundations%20Associate.pdf" target="_blank" class="cert-btn">📄 View Certificate</a>
                     </div>
                 </div>
             </div>
@@ -1069,7 +1092,6 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                             <li>Natural Language Processing</li>
                             <li>Computer Vision</li>
                             <li>LLM Integration</li>
-                            <li>Automation</li>
                         </ul>
                     </div>
                     <div class="skill-card">
