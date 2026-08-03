@@ -785,8 +785,561 @@ template = """
             }
         }
     </style>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Flag JS early so reveal states never trap content for no-JS users -->
+    <script>document.documentElement.className += ' js';</script>
+
+    <!-- ============================================================
+         DARK / NEON LAYER — overrides the base sheet above
+         ============================================================ -->
+    <style>
+    :root {
+        --bg:        #07070c;
+        --glass:     rgba(255,255,255,.035);
+        --glass-2:   rgba(255,255,255,.06);
+        --stroke:    rgba(255,255,255,.08);
+        --stroke-2:  rgba(255,255,255,.16);
+        --neon:      #8b7cff;
+        --neon-2:    #c86bff;
+        --cyan:      #22d3ee;
+        --txt:       #ececf5;
+        --txt-2:     #9b9bb0;
+        --txt-3:     #70708a;
+        --grad:      linear-gradient(120deg,#8b7cff 0%,#c86bff 50%,#22d3ee 100%);
+        --radius:    18px;
+    }
+
+    /* ---------- Base ---------- */
+    html { scroll-behavior: smooth; }
+
+    body {
+        background: var(--bg) !important;
+        color: var(--txt) !important;
+        font-family: 'Inter', system-ui, sans-serif !important;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    h1,h2,h3,.logo { font-family:'Space Grotesk', system-ui, sans-serif !important; letter-spacing:-.02em; }
+
+    ::selection { background: rgba(139,124,255,.35); color:#fff; }
+
+    /* ---------- Custom scrollbar ---------- */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #0a0a12; }
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg,var(--neon),var(--neon-2));
+        border-radius: 10px;
+        border: 2px solid #0a0a12;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg,var(--neon-2),var(--cyan)); }
+
+    /* ---------- Animated background mesh ---------- */
+    .bg-mesh {
+        position: fixed; inset: 0;
+        z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .bg-mesh .blob {
+        position: absolute; border-radius: 50%;
+        filter: blur(90px); opacity: .5;
+        will-change: transform;
+    }
+    .bg-mesh .b1 {
+        width: 46vw; height: 46vw; top: -12vw; left: -10vw;
+        background: radial-gradient(circle,#5b3cff 0%,transparent 70%);
+        animation: drift1 24s ease-in-out infinite;
+    }
+    .bg-mesh .b2 {
+        width: 40vw; height: 40vw; top: 30vh; right: -14vw;
+        background: radial-gradient(circle,#c439ff 0%,transparent 70%);
+        animation: drift2 30s ease-in-out infinite;
+    }
+    .bg-mesh .b3 {
+        width: 34vw; height: 34vw; bottom: -10vw; left: 25vw;
+        background: radial-gradient(circle,#0891b2 0%,transparent 70%);
+        animation: drift3 27s ease-in-out infinite;
+    }
+    @keyframes drift1 {
+        0%,100% { transform: translate(0,0) scale(1); }
+        33%     { transform: translate(8vw,10vh) scale(1.15); }
+        66%     { transform: translate(-4vw,6vh) scale(.9); }
+    }
+    @keyframes drift2 {
+        0%,100% { transform: translate(0,0) scale(1); }
+        50%     { transform: translate(-12vw,-8vh) scale(1.2); }
+    }
+    @keyframes drift3 {
+        0%,100% { transform: translate(0,0) scale(1); }
+        40%     { transform: translate(10vw,-12vh) scale(1.1); }
+        75%     { transform: translate(-6vw,4vh) scale(.95); }
+    }
+    /* faint tech grid on top of the blobs */
+    .grid-overlay {
+        position: absolute; inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+        background-size: 54px 54px;
+        mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 25%, transparent 78%);
+        -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 25%, transparent 78%);
+    }
+
+    /* Keep nav above page content — it owns its own stacking context, so the
+       dropdown's z-index only competes inside it, not against .container. */
+    .container, footer { position: relative; z-index: 2; }
+    nav { position: sticky; top: 0; z-index: 1000; }
+
+    /* ---------- Scroll progress bar ---------- */
+    .scroll-progress {
+        position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+        background: var(--grad);
+        z-index: 5000;
+        box-shadow: 0 0 14px rgba(139,124,255,.9);
+        transition: width .08s linear;
+    }
+
+    /* ---------- Cursor glow ---------- */
+    .cursor-glow {
+        position: fixed; top: 0; left: 0;
+        width: 420px; height: 420px; border-radius: 50%;
+        pointer-events: none; z-index: 1;
+        background: radial-gradient(circle, rgba(139,124,255,.13) 0%, transparent 62%);
+        transform: translate(-50%,-50%);
+        opacity: 0; transition: opacity .4s ease;
+    }
+    @media (hover:hover) and (min-width: 969px) { .cursor-glow.on { opacity: 1; } }
+
+    /* ---------- Nav ---------- */
+    nav {
+        background: rgba(9,9,16,.72) !important;
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        border-bottom: 1px solid var(--stroke);
+        box-shadow: 0 4px 30px rgba(0,0,0,.5) !important;
+    }
+    .logo {
+        background: var(--grad);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: shimmer 6s linear infinite;
+        font-weight: 700 !important;
+    }
+    @keyframes shimmer { to { background-position: 200% center; } }
+
+    .nav-links li a { color: var(--txt-2) !important; font-size:.95em; font-weight:500; border-bottom:none !important; position:relative; }
+    .nav-links li a::after {
+        content:''; position:absolute; left:20px; right:20px; bottom:16px; height:2px;
+        background: var(--grad); border-radius:2px;
+        transform: scaleX(0); transform-origin:left; transition: transform .32s cubic-bezier(.4,0,.2,1);
+    }
+    .nav-links li a:hover { background: transparent !important; color: var(--txt) !important; }
+    .nav-links li a:hover::after { transform: scaleX(1); }
+    .nav-links li a.active {
+        background: transparent !important; color: #fff !important;
+        text-shadow: 0 0 18px rgba(139,124,255,.65);
+    }
+    .nav-links li a.active::after { transform: scaleX(1); }
+
+    .dropdown-content {
+        background: rgba(11,11,20,.94) !important;
+        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        border: 1px solid var(--stroke);
+        border-radius: 14px; margin-top: 6px; padding: 6px;
+        box-shadow: 0 24px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(139,124,255,.1) !important;
+    }
+    .dropdown-content a {
+        color: var(--txt-2) !important; border-bottom: none !important;
+        border-radius: 9px; font-size: .9em; padding: 12px 16px !important;
+    }
+    .dropdown-content a:hover {
+        background: rgba(139,124,255,.14) !important;
+        color: #fff !important; padding-left: 22px !important;
+    }
+    .mobile-menu-toggle { color: var(--txt) !important; }
+
+    /* ---------- Glass surfaces ---------- */
+    .hero, .section, .project-overview, .screenshots-section {
+        background: var(--glass) !important;
+        backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius) !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,.42) !important;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero { position: relative; overflow: hidden; padding: 70px 50px !important; }
+    .hero::before {
+        content:''; position:absolute; top:-1px; left:12%; right:12%; height:1px;
+        background: linear-gradient(90deg,transparent,var(--neon),var(--cyan),transparent);
+    }
+    .hero h1 {
+        font-size: clamp(2.3em, 6vw, 4em) !important;
+        background: var(--grad);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 220% auto;
+        animation: shimmer 7s linear infinite;
+        font-weight: 700; margin-bottom: 18px !important;
+    }
+    .hero h1 .caret {
+        -webkit-text-fill-color: var(--cyan); color: var(--cyan);
+        font-weight: 300; animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .hero .title { color: var(--txt) !important; font-weight: 500; opacity: .92; }
+    .hero .tagline { color: var(--txt-2) !important; }
+
+    .profile-photo {
+        border: 1px solid var(--stroke-2) !important;
+        box-shadow: 0 0 0 6px rgba(139,124,255,.07), 0 0 50px rgba(139,124,255,.35) !important;
+        transition: transform .5s cubic-bezier(.34,1.56,.64,1), box-shadow .5s ease;
+    }
+    .profile-photo:hover {
+        transform: scale(1.07) rotate(2.5deg);
+        box-shadow: 0 0 0 8px rgba(139,124,255,.12), 0 0 70px rgba(200,107,255,.55) !important;
+    }
+
+    /* ---------- Headings ---------- */
+    .section h2, .project-overview h2, .screenshots-section h2 {
+        color: var(--txt) !important;
+        font-size: 2em !important; font-weight: 600;
+    }
+    .section h2:after {
+        background: var(--grad) !important;
+        width: 54px !important; height: 3px !important;
+        box-shadow: 0 0 16px rgba(139,124,255,.8);
+    }
+
+    /* gradient text for the inline-styled purple sub-headings */
+    h3[style*="#764ba2"] {
+        background: var(--grad);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+    }
+
+    /* ---------- Buttons ---------- */
+    .contact-btn, .cert-btn, .view-details-btn, .back-button {
+        background: rgba(139,124,255,.1) !important;
+        border: 1px solid rgba(139,124,255,.3);
+        color: var(--txt) !important;
+        position: relative; overflow: hidden;
+        transition: transform .3s cubic-bezier(.34,1.4,.64,1), box-shadow .3s, border-color .3s, background .3s;
+    }
+    .contact-btn::before, .cert-btn::before, .view-details-btn::before, .back-button::before {
+        content:''; position:absolute; inset:0;
+        background: var(--grad); opacity:0; transition: opacity .3s;
+        z-index:-1;
+    }
+    .contact-btn:hover, .cert-btn:hover, .view-details-btn:hover, .back-button:hover {
+        background: rgba(139,124,255,.2) !important;
+        border-color: rgba(200,107,255,.65);
+        color: #fff !important;
+        box-shadow: 0 10px 34px rgba(139,124,255,.35), 0 0 0 1px rgba(200,107,255,.25) !important;
+        transform: translateY(-3px) !important;
+    }
+    .back-button:hover { transform: translateX(-6px) !important; }
+    .view-details-btn:hover { transform: translateX(6px) !important; }
+
+    /* ---------- Cards (glass + mouse spotlight) ---------- */
+    .skill-card, .feature-card, .contact-card, .project-card,
+    .about-highlights, .interest-card, .education-card {
+        background: var(--glass) !important;
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--stroke) !important;
+        border-radius: 16px !important;
+        position: relative; overflow: hidden;
+        transition: transform .4s cubic-bezier(.34,1.3,.64,1), border-color .4s, box-shadow .4s, background .4s;
+    }
+    /* radial spotlight that tracks the pointer */
+    .skill-card::after, .feature-card::after, .contact-card::after,
+    .project-card::after, .interest-card::after {
+        content:''; position:absolute; inset:0; pointer-events:none;
+        background: radial-gradient(340px circle at var(--mx,50%) var(--my,50%), rgba(139,124,255,.14), transparent 60%);
+        opacity: 0; transition: opacity .35s;
+    }
+    .skill-card:hover::after, .feature-card:hover::after, .contact-card:hover::after,
+    .project-card:hover::after, .interest-card:hover::after { opacity: 1; }
+
+    .skill-card:hover, .feature-card:hover, .contact-card:hover, .interest-card:hover {
+        transform: translateY(-7px) !important;
+        border-color: var(--stroke-2) !important;
+        box-shadow: 0 22px 55px rgba(0,0,0,.55), 0 0 0 1px rgba(139,124,255,.2) !important;
+    }
+
+    .skill-card  { border-top: 1px solid var(--stroke) !important; }
+    .contact-card{ border-top: 1px solid var(--stroke) !important; }
+    .skill-card::before, .contact-card::before {
+        content:''; position:absolute; top:0; left:0; right:0; height:2px;
+        background: var(--grad); opacity:.85;
+    }
+    /* Neon left rail via pseudo-element — a translucent fill layer let the
+       gradient bleed through the whole card, so use a real overlay instead. */
+    .feature-card, .about-highlights {
+        border-left: 1px solid var(--stroke) !important;
+        background: var(--glass) !important;
+    }
+    .feature-card::before, .about-highlights::before {
+        content: ''; position: absolute;
+        left: 0; top: 0; bottom: 0; width: 2px;
+        background: var(--grad);
+        box-shadow: 0 0 18px rgba(139,124,255,.55);
+    }
+
+    .skill-card h3, .feature-card h3, .contact-card h3, .about-highlights h3 {
+        color: var(--txt) !important; font-weight: 600;
+    }
+    .skill-card li:before { color: var(--neon) !important; }
+    .about-highlights li:before { color: var(--cyan) !important; }
+    .skill-card li, .about-highlights li, .feature-card p,
+    .contact-card p, .about-text p, .project-overview p {
+        color: var(--txt-2) !important;
+    }
+
+    /* ---------- Interest / education cards ---------- */
+    .interest-card, .education-card {
+        background: linear-gradient(140deg, rgba(139,124,255,.13), rgba(200,107,255,.07)) !important;
+    }
+    .interest-card:hover { transform: translateY(-7px) scale(1.02) !important; }
+    .interest-card .icon { filter: drop-shadow(0 0 16px rgba(139,124,255,.7)); }
+
+    /* ---------- Project cards ---------- */
+    .project-card { padding: 32px !important; }
+    .project-card:before {
+        width: 2px !important;
+        background: var(--grad) !important;
+        box-shadow: 0 0 22px rgba(139,124,255,.85);
+    }
+    .project-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(139,124,255,.4) !important;
+        box-shadow: 0 26px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(139,124,255,.22) !important;
+    }
+    .project-card h3 { color: var(--txt) !important; font-size: 1.4em !important; font-weight: 600; }
+    .project-card:hover h3 {
+        background: var(--grad);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .project-card p { color: var(--txt-2) !important; }
+    .project-date {
+        background: rgba(255,255,255,.05) !important;
+        border: 1px solid var(--stroke);
+        color: var(--txt-3) !important;
+        font-family: 'JetBrains Mono', monospace; font-size: .8em !important;
+    }
+
+    /* ---------- Project detail header ---------- */
+    .project-detail-header {
+        background: linear-gradient(135deg, rgba(139,124,255,.16), rgba(200,107,255,.08)) !important;
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius) !important;
+        position: relative; overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+    .project-detail-header::before {
+        content:''; position:absolute; inset:0;
+        background-image:
+            linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+        background-size: 34px 34px;
+    }
+    .project-detail-header h1 {
+        position: relative;
+        background: linear-gradient(120deg,#fff 10%,#c9bfff 60%,#8fe9ff 100%);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .project-meta-item {
+        position: relative;
+        background: rgba(0,0,0,.28);
+        border: 1px solid var(--stroke);
+        padding: 7px 15px; border-radius: 999px;
+        font-size: .82em; color: var(--txt-2);
+        font-family: 'JetBrains Mono', monospace;
+    }
+    .project-meta { gap: 12px !important; }
+
+    /* ---------- Tech badges ---------- */
+    .tech-badge-large {
+        background: rgba(139,124,255,.09) !important;
+        border: 1px solid rgba(139,124,255,.26);
+        color: var(--txt) !important;
+        font-size: .9em !important;
+        font-weight: 500;
+        transition: transform .3s cubic-bezier(.34,1.5,.64,1), box-shadow .3s, border-color .3s, background .3s;
+        cursor: default;
+    }
+    .tech-badge-large:hover {
+        transform: translateY(-4px) scale(1.04);
+        background: rgba(139,124,255,.2) !important;
+        border-color: rgba(200,107,255,.7);
+        box-shadow: 0 10px 28px rgba(139,124,255,.4);
+    }
+    .tech-badge-large small { color: var(--txt-2) !important; }
+
+    /* ---------- Screenshots ---------- */
+    .screenshot-item {
+        border: 1px solid var(--stroke);
+        border-radius: 14px !important;
+        background: rgba(0,0,0,.3);
+        box-shadow: 0 14px 40px rgba(0,0,0,.5) !important;
+        transition: transform .45s cubic-bezier(.34,1.25,.64,1), box-shadow .45s, border-color .45s;
+    }
+    .screenshot-item:hover {
+        transform: translateY(-6px);
+        border-color: rgba(139,124,255,.45);
+        box-shadow: 0 26px 65px rgba(0,0,0,.65), 0 0 0 1px rgba(139,124,255,.2) !important;
+    }
+    .screenshot-item img { transition: filter .4s; }
+    .screenshot-item:hover img { filter: brightness(1.06) saturate(1.08); }
+    .screenshot-caption {
+        background: rgba(255,255,255,.04) !important;
+        color: var(--txt-2) !important;
+        border-top: 1px solid var(--stroke);
+        font-size: .9em;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+        background: rgba(255,255,255,.02) !important;
+        border-top: 1px solid var(--stroke);
+        color: var(--txt-3) !important;
+    }
+
+    /* ---------- Neutralise remaining hardcoded light-mode inline colours ---------- */
+    [style*="#333"], [style*="#444"], [style*="#555"], [style*="#666"], [style*="#999"] {
+        color: var(--txt-2) !important;
+    }
+    .contact-card a { color: var(--neon) !important; }
+    .contact-card a:hover { color: var(--cyan) !important; }
+
+    /* ---------- Scroll reveal ---------- */
+    html.js .reveal-target {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1);
+    }
+    html.js .reveal-target.is-visible { opacity: 1; transform: none; }
+
+    /* ---------- Tab transition ---------- */
+    .tab-content.active { animation: tabIn .55s cubic-bezier(.16,1,.3,1); }
+    @keyframes tabIn {
+        from { opacity:0; transform: translateY(16px) scale(.995); filter: blur(3px); }
+        to   { opacity:1; transform:none; filter:none; }
+    }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+        html.js .reveal-target { opacity:1 !important; transform:none !important; }
+    }
+
+    /* ---------- In-page PDF viewer ---------- */
+    .pdf-modal {
+        position: fixed; inset: 0; z-index: 6000;
+        display: flex; align-items: center; justify-content: center;
+        padding: 4vh 4vw;
+        opacity: 0; pointer-events: none;
+        transition: opacity .3s ease;
+    }
+    .pdf-modal.open { opacity: 1; pointer-events: auto; }
+    .pdf-modal-backdrop {
+        position: absolute; inset: 0;
+        background: rgba(4,4,9,.82);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .pdf-modal-panel {
+        position: relative;
+        width: min(1020px, 100%); height: min(88vh, 100%);
+        display: flex; flex-direction: column;
+        background: rgba(14,14,22,.97);
+        border: 1px solid var(--stroke-2);
+        border-radius: 16px; overflow: hidden;
+        box-shadow: 0 40px 120px rgba(0,0,0,.8), 0 0 0 1px rgba(139,124,255,.18);
+        transform: translateY(26px) scale(.97);
+        transition: transform .4s cubic-bezier(.16,1,.3,1);
+    }
+    .pdf-modal.open .pdf-modal-panel { transform: none; }
+    .pdf-modal-bar {
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        padding: 13px 18px;
+        border-bottom: 1px solid var(--stroke);
+        background: rgba(255,255,255,.03);
+    }
+    .pdf-modal-title {
+        font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+        font-size: .95em; color: var(--txt);
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .pdf-modal-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .pdf-icon-btn {
+        width: 34px; height: 34px;
+        display: grid; place-items: center;
+        border-radius: 9px; cursor: pointer;
+        background: rgba(255,255,255,.05);
+        border: 1px solid var(--stroke);
+        color: var(--txt-2); font-size: 15px; line-height: 1;
+        text-decoration: none;
+        transition: background .25s, border-color .25s, color .25s, transform .25s;
+    }
+    .pdf-icon-btn:hover {
+        background: rgba(139,124,255,.22);
+        border-color: rgba(200,107,255,.6);
+        color: #fff; transform: translateY(-2px);
+    }
+    .pdf-frame { flex: 1; width: 100%; border: 0; background: #1b1b24; }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 968px) {
+        .pdf-modal { padding: 0; }
+        .pdf-modal-panel { width: 100%; height: 100%; border-radius: 0; border: none; }
+        .nav-links {
+            background: rgba(9,9,16,.97) !important;
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--stroke);
+        }
+        .nav-links li a { border-bottom: 1px solid var(--stroke) !important; }
+        .nav-links li a::after { display: none; }
+        .dropdown-content { background: rgba(0,0,0,.4) !important; border:none; box-shadow:none !important; }
+        .hero { padding: 44px 22px !important; }
+        .cursor-glow { display: none; }
+    }
+    </style>
 </head>
 <body>
+    <!-- Ambient layers -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="bg-mesh" aria-hidden="true">
+        <span class="blob b1"></span>
+        <span class="blob b2"></span>
+        <span class="blob b3"></span>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <!-- In-page certificate viewer -->
+    <div class="pdf-modal" id="pdfModal" role="dialog" aria-modal="true" aria-label="Certificate viewer">
+        <div class="pdf-modal-backdrop" data-close></div>
+        <div class="pdf-modal-panel">
+            <div class="pdf-modal-bar">
+                <span class="pdf-modal-title" id="pdfModalTitle">Certificate</span>
+                <div class="pdf-modal-actions">
+                    <a class="pdf-icon-btn" id="pdfOpenNew" href="#" target="_blank" rel="noopener" title="Open in new tab">⇗</a>
+                    <button class="pdf-icon-btn" type="button" data-close title="Close (Esc)">✕</button>
+                </div>
+            </div>
+            <iframe class="pdf-frame" id="pdfFrame" title="Certificate PDF"></iframe>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -809,6 +1362,7 @@ template = """
                         <a href="#" onclick="showTab(event, 'project-youtube')">YouTube Sentiment Analysis</a>
                         <a href="#" onclick="showTab(event, 'project-face')">Face Authentication System</a>
                         <a href="#" onclick="showTab(event, 'project-portfolio')">Portfolio Tracker</a>
+                        <a href="#" onclick="showTab(event, 'project-uci-pdf-cleanup')">PDF Cleanup</a>
                     </div>
                 </li>
                 <li><a href="#" class="nav-link" onclick="showTab(event, 'contact')">Contact</a></li>
@@ -846,7 +1400,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
     <ul style="margin-top: 20px; color: #555; line-height: 1.8;">
         <li>Built and deployed WhatsApp Cloud API–based financial automation systems used by a SEBI-registered firm</li>
         <li>Designed AI–human collaboration workflows with real-time monitoring and human takeover</li>
-        <li>Strong backend foundation using Python, Flask/FastAPI, MongoDB, and REST APIs</li>
+        <li>Strong backend foundation using Python, Flask, MongoDB, and REST APIs</li>
         <li>Experience working with real client data, compliance constraints, and production operations</li>
     </ul>
 
@@ -1052,7 +1606,6 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <h3>💻 Programming Languages</h3>
                         <ul>
                             <li>Python</li>
-                            <li>SQL</li>
                             <li>JavaScript</li>
                             <li>HTML</li>
                             <li>CSS</li>
@@ -1061,10 +1614,8 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                     <div class="skill-card">
                         <h3>🛠️ Frameworks & Libraries</h3>
                         <ul>
-                            <li>FastAPI</li>
                             <li>Flask</li>
                             <li>Streamlit</li>
-                            <li>Express.js</li> 
                             <li>Bootstrap</li>
                             <li>Web Scraping</li>
                         </ul>
@@ -1077,7 +1628,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                             <li>Make.com</li>
                             <li>Zoho CRM (Automation, Custom Modules, API Integration)</li>
                             <li>N8N</li>
-                            <li>Manychats</li>
+                            <li>ManyChats</li>
                             <li>Retell AI</li>
                             <li>Git</li>
                         </ul>
@@ -1107,7 +1658,6 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                     <div class="skill-card">
                         <h3>☁️ Cloud & APIs</h3>
                         <ul>
-                            <li>AWS Services</li>
                             <li>Google Cloud Platform</li>
                             <li>WhatsApp Cloud API</li>
                             <li>RESTful APIs</li>
@@ -1196,6 +1746,15 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                     <p>Flask-based finance web application with real-time market data and investment calculators.</p>
                     <span class="view-details-btn">View Details →</span>
                 </div>
+
+                <div class="project-card" onclick="showTab(event, 'project-uci-pdf-cleanup')">
+                    <div class="project-header">
+                        <h3>Automated PDF Temp Cleanup System</h3>
+                        <span class="project-date">Jul 2026 - Present</span>
+                    </div>
+                    <p>Reusable automated cleanup system for temporary PDF/Word files across UCI, UAT, and PROD environments — with AI-generated summaries, Teams Adaptive Cards, and email reports via an n8n + Flask REST API pipeline.</p>
+                    <span class="view-details-btn">View Details →</span>
+                </div>
             </div>
         </div>
 
@@ -1266,13 +1825,13 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
                 <div class="tech-stack-detail">
-                    <span class="tech-badge-large">WhatsApp Cloud API</span>
-                    <span class="tech-badge-large">Python</span>
-                    <span class="tech-badge-large">Flask</span>
-                    <span class="tech-badge-large">MongoDB</span>
-                    <span class="tech-badge-large">JavaScript</span>
-                    <span class="tech-badge-large">Make.com</span>
-                    <span class="tech-badge-large">GPT-4</span>
+                    <span class="tech-badge-large">WhatsApp Cloud API <small style="font-weight:400; opacity:0.85; font-size:0.78em">— sends &amp; receives messages</small></span>
+                    <span class="tech-badge-large">Python <small style="font-weight:400; opacity:0.85; font-size:0.78em">— backend logic</small></span>
+                    <span class="tech-badge-large">Flask <small style="font-weight:400; opacity:0.85; font-size:0.78em">— web server &amp; routes</small></span>
+                    <span class="tech-badge-large">MongoDB <small style="font-weight:400; opacity:0.85; font-size:0.78em">— stores conversations</small></span>
+                    <span class="tech-badge-large">JavaScript <small style="font-weight:400; opacity:0.85; font-size:0.78em">— dashboard UI</small></span>
+                    <span class="tech-badge-large">Make.com <small style="font-weight:400; opacity:0.85; font-size:0.78em">— workflow automation</small></span>
+                    <span class="tech-badge-large">GPT-4 <small style="font-weight:400; opacity:0.85; font-size:0.78em">— AI chatbot responses</small></span>
                 </div>
             </div>
 
@@ -1359,9 +1918,10 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
                 <div class="tech-stack-detail">
-                    <span class="tech-badge-large">Python</span>
-                    <span class="tech-badge-large">Google Cloud Platform</span>
-                    <span class="tech-badge-large">Document Automation</span>
+                    <span class="tech-badge-large">Python <small style="font-weight:400; opacity:0.85; font-size:0.78em">— template processing logic</small></span>
+                    <span class="tech-badge-large">Streamlit <small style="font-weight:400; opacity:0.85; font-size:0.78em">— initial prototype &amp; UI</small></span>
+                    <span class="tech-badge-large">Google Cloud Platform <small style="font-weight:400; opacity:0.85; font-size:0.78em">— final deployment &amp; hosting</small></span>
+                    <span class="tech-badge-large">Document Automation <small style="font-weight:400; opacity:0.85; font-size:0.78em">— dynamic proposal generation</small></span>
                 </div>
             </div>
 
@@ -1439,10 +1999,10 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
                 <div class="tech-stack-detail">
-                    <span class="tech-badge-large">Retell AI</span>
-                    <span class="tech-badge-large">Make.com</span>
-                    <span class="tech-badge-large">Google Calendar</span>
-                    <span class="tech-badge-large">Microsoft Teams</span>
+                    <span class="tech-badge-large">Retell AI <small style="font-weight:400; opacity:0.85; font-size:0.78em">— AI voice calling agent</small></span>
+                    <span class="tech-badge-large">Make.com <small style="font-weight:400; opacity:0.85; font-size:0.78em">— orchestrates the full flow</small></span>
+                    <span class="tech-badge-large">Google Calendar <small style="font-weight:400; opacity:0.85; font-size:0.78em">— time-zone-aware scheduling</small></span>
+                    <span class="tech-badge-large">Microsoft Teams <small style="font-weight:400; opacity:0.85; font-size:0.78em">— team notifications</small></span>
                 </div>
             </div>
 
@@ -1523,11 +2083,12 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
                 <div class="tech-stack-detail">
-                    <span class="tech-badge-large">WhatsApp Cloud API</span>
-                    <span class="tech-badge-large">Meta WhatsApp Manager</span>
-                    <span class="tech-badge-large">Zoho CRM</span>
-                    <span class="tech-badge-large">Make.com</span>
-                    <span class="tech-badge-large">REST APIs & Webhooks</span>
+                    <span class="tech-badge-large">WhatsApp Cloud API <small style="font-weight:400; opacity:0.85; font-size:0.78em">— delivers SIP reminder messages</small></span>
+                    <span class="tech-badge-large">Meta WhatsApp Manager <small style="font-weight:400; opacity:0.85; font-size:0.78em">— template approval &amp; management</small></span>
+                    <span class="tech-badge-large">Zoho CRM <small style="font-weight:400; opacity:0.85; font-size:0.78em">— source of client data</small></span>
+                    <span class="tech-badge-large">Make.com <small style="font-weight:400; opacity:0.85; font-size:0.78em">— orchestrates the full flow</small></span>
+                    <span class="tech-badge-large">ManyChats <small style="font-weight:400; opacity:0.85; font-size:0.78em">— earlier version of the WhatsApp flow</small></span>
+                    <span class="tech-badge-large">REST APIs &amp; Webhooks <small style="font-weight:400; opacity:0.85; font-size:0.78em">— connects all services</small></span>
                 </div>
             </div>
 
@@ -1612,18 +2173,18 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
                 <div class="tech-stack-detail">
-                    <span class="tech-badge-large">🐍 Backend: Flask (Python)</span>
-                    <span class="tech-badge-large">🧠 LLM Inference: Groq API · Llama 3.3</span>
-                    <span class="tech-badge-large">🌐 Frontend: HTML, CSS, Vanilla JavaScript</span>
-                    <span class="tech-badge-large">📊 Visualization: Chart.js</span>
-                    <span class="tech-badge-large">📄 Reports: ReportLab (PDF generation)</span>
+                    <span class="tech-badge-large">🐍 Flask (Python) <small style="font-weight:400; opacity:0.85; font-size:0.78em">— handles CSV uploads &amp; routes</small></span>
+                    <span class="tech-badge-large">🧠 Groq API + Llama 3.3 <small style="font-weight:400; opacity:0.85; font-size:0.78em">— generates spending insights</small></span>
+                    <span class="tech-badge-large">🌐 HTML, CSS, JavaScript <small style="font-weight:400; opacity:0.85; font-size:0.78em">— user interface</small></span>
+                    <span class="tech-badge-large">📊 Chart.js <small style="font-weight:400; opacity:0.85; font-size:0.78em">— interactive spending charts</small></span>
+                    <span class="tech-badge-large">📄 ReportLab <small style="font-weight:400; opacity:0.85; font-size:0.78em">— downloadable PDF export</small></span>
                 </div>
             </div>
 
             <div class="screenshots-section">
                 <h2>Screenshots & Demo</h2>
                 <div class="screenshots-grid">
-                    <<div class="screenshot-item" style="grid-column: 1 / -1;">
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
                         <img  src="{{ url_for('static', filename='images/f1.png') }}"  alt="FinSight AI" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
                         <div class="screenshot-caption">High-level financial dashboard showing total spending, number of categories, and transaction volume derived from uploaded bank data.</div>
                     </div>
@@ -1693,10 +2254,10 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
                 <div class="tech-stack-detail">
-                    <span class="tech-badge-large">Python</span>
-                    <span class="tech-badge-large">Selenium</span>
-                    <span class="tech-badge-large">TextBlob</span>
-                    <span class="tech-badge-large">NLP</span>
+                    <span class="tech-badge-large">Python <small style="font-weight:400; opacity:0.85; font-size:0.78em">— scraping &amp; analysis logic</small></span>
+                    <span class="tech-badge-large">Selenium <small style="font-weight:400; opacity:0.85; font-size:0.78em">— scrapes YouTube comments</small></span>
+                    <span class="tech-badge-large">TextBlob <small style="font-weight:400; opacity:0.85; font-size:0.78em">— sentiment scoring</small></span>
+                    <span class="tech-badge-large">NLP <small style="font-weight:400; opacity:0.85; font-size:0.78em">— text classification pipeline</small></span>
                 </div>
             </div>
 
@@ -1744,9 +2305,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                     Built an end-to-end facial authentication system for a banking web application using Flask, OpenCV (LBPH), and MongoDB. Implemented secure user signup, face enrollment, and login with session management, confidence-based face verification, and server-side model persistence.
                 </p>
                 
-                <h3 style="color
-                
-                : #764ba2; margin-top: 30px; margin-bottom: 15px;">Key Features</h3>
+                <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Key Features</h3>
                 <div class="features-grid">
                     <div class="feature-card">
                         <h3>👤 Face Recognition</h3>
@@ -1776,13 +2335,13 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
                 <div class="tech-stack-detail">
-                    <span class="tech-badge-large">Python</span>
-                    <span class="tech-badge-large">Flask</span>
-                    <span class="tech-badge-large">OpenCV</span>
-                    <span class="tech-badge-large">LBPH</span>
-                    <span class="tech-badge-large">MongoDB</span>
-                    <span class="tech-badge-large">Bootstrap</span>
-                    <span class="tech-badge-large">JavaScript</span>
+                    <span class="tech-badge-large">Python <small style="font-weight:400; opacity:0.85; font-size:0.78em">— core application logic</small></span>
+                    <span class="tech-badge-large">Flask <small style="font-weight:400; opacity:0.85; font-size:0.78em">— web server &amp; API routes</small></span>
+                    <span class="tech-badge-large">OpenCV <small style="font-weight:400; opacity:0.85; font-size:0.78em">— face detection &amp; image processing</small></span>
+                    <span class="tech-badge-large">LBPH <small style="font-weight:400; opacity:0.85; font-size:0.78em">— face recognition algorithm</small></span>
+                    <span class="tech-badge-large">MongoDB <small style="font-weight:400; opacity:0.85; font-size:0.78em">— stores face encodings</small></span>
+                    <span class="tech-badge-large">Bootstrap <small style="font-weight:400; opacity:0.85; font-size:0.78em">— responsive UI layout</small></span>
+                    <span class="tech-badge-large">JavaScript <small style="font-weight:400; opacity:0.85; font-size:0.78em">— frontend interactions</small></span>
                 </div>
             </div>
 
@@ -1868,12 +2427,12 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
                 <div class="tech-stack-detail">
-                    <span class="tech-badge-large">Python</span>
-                    <span class="tech-badge-large">Flask</span>
-                    <span class="tech-badge-large">Polygon API</span>
-                    <span class="tech-badge-large">HTML/CSS</span>
-                    <span class="tech-badge-large">Bootstrap</span>
-                    <span class="tech-badge-large">JavaScript</span>
+                    <span class="tech-badge-large">Python <small style="font-weight:400; opacity:0.85; font-size:0.78em">— server-side logic</small></span>
+                    <span class="tech-badge-large">Flask <small style="font-weight:400; opacity:0.85; font-size:0.78em">— web framework</small></span>
+                    <span class="tech-badge-large">Polygon API <small style="font-weight:400; opacity:0.85; font-size:0.78em">— real-time stock market data</small></span>
+                    <span class="tech-badge-large">HTML/CSS <small style="font-weight:400; opacity:0.85; font-size:0.78em">— page structure &amp; styling</small></span>
+                    <span class="tech-badge-large">Bootstrap <small style="font-weight:400; opacity:0.85; font-size:0.78em">— responsive layout</small></span>
+                    <span class="tech-badge-large">JavaScript <small style="font-weight:400; opacity:0.85; font-size:0.78em">— interactive UI</small></span>
                 </div>
             </div>
 
@@ -1891,6 +2450,121 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                     <div class="screenshot-item" style="grid-column: 1 / -1;">
                         <img  src="{{ url_for('static', filename='images/f_3.png') }}"  alt="Facial Authentication" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
                         <div class="screenshot-caption">Stock Market Data Display Using Polygon API (Demo).</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 9: UCI PDF Temp Cleanup -->
+        <div id="project-uci-pdf-cleanup" class="tab-content">
+            <a href="#" class="back-button" onclick="showTab(event, 'projects')">← Back to Projects</a>
+
+            <div class="project-detail-header">
+                <h1>Automated PDF Temp Cleanup System</h1>
+                <p style="font-size: 1.2em; margin-top: 10px;">Reusable across UCI, UAT &amp; PROD — AI-Powered Document Lifecycle Management</p>
+                <div class="project-meta">
+                    <div class="project-meta-item">
+                        <span>📅</span>
+                        <span>Jul 2026 - Present</span>
+                    </div>
+                    <div class="project-meta-item">
+                        <span>🏢</span>
+                        <span>UCI, UAT &amp; PROD @ Solartis LLC</span>
+                    </div>
+                    <div class="project-meta-item">
+                        <span>👥</span>
+                        <span>Internal Tool</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-overview">
+                <h2>Project Overview</h2>
+                <p>
+                    Built to replace manual cleanup of temporary documents generated by a Solartis insurance platform.
+                    Designed as a reusable system deployable across multiple environments — UCI, UAT, and PROD — each with
+                    its own Flask REST API on a Linux VM. The API handles all file operations: scanning directories, extracting
+                    dates from filenames, and deleting files older than the retention window. n8n orchestrates the full pipeline:
+                    snapshot before, run cleanup, snapshot after, generate AI summary, send notifications.
+                </p>
+                <p>
+                    Runs daily at 12 PM. After each run, a Qwen LLM (via LiteLLM) generates a 2–3 sentence professional
+                    summary of what happened. Results are delivered as a rich Microsoft Teams Adaptive Card and a detailed
+                    HTML email — both showing files before/after, disk freed, and a breakdown of files retained and deleted
+                    by date. A cron watchdog separately monitors whether the cleanup ran and sends an alert email if it didn't.
+                </p>
+
+                <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Key Features</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>🗂️ Automated File Cleanup</h3>
+                        <p>Scans MemoryPDF and SubMemoryPDF directories daily, deletes .pdf/.doc/.docx files older than the configured retention period based on dates in filenames.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🤖 AI-Generated Summaries</h3>
+                        <p>Qwen LLM (via LiteLLM) produces a concise professional summary of each cleanup run, injected into both the email and Teams notification.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📨 Multi-Channel Notifications</h3>
+                        <p>Microsoft Teams Adaptive Card and HTML email report after every run, showing AI summary, file counts, disk usage delta, and files retained/deleted by date.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔌 REST API Architecture</h3>
+                        <p>Flask API on the VM exposes /api/cleanup, /api/snapshot, /api/logs, and /health endpoints. n8n calls these via HTTP with API key authentication.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🛡️ Cron Watchdog</h3>
+                        <p>A separate monitor script runs 5 minutes after the scheduled cleanup and sends an alert email if no evidence log is found for today's date.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔐 Encrypted Secrets</h3>
+                        <p>Sensitive credentials in .env are encrypted with AES-256-GCM. The app decrypts automatically on startup using a key file never committed to git.</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
+                <div class="tech-stack-detail">
+                    <span class="tech-badge-large">Python <small style="font-weight:400; opacity:0.85; font-size:0.78em">— file ops, API logic &amp; encryption</small></span>
+                    <span class="tech-badge-large">Flask <small style="font-weight:400; opacity:0.85; font-size:0.78em">— REST API endpoints</small></span>
+                    <span class="tech-badge-large">n8n <small style="font-weight:400; opacity:0.85; font-size:0.78em">— orchestrates the full pipeline</small></span>
+                    <span class="tech-badge-large">LiteLLM <small style="font-weight:400; opacity:0.85; font-size:0.78em">— routes requests to Qwen model</small></span>
+                    <span class="tech-badge-large">Qwen (qwen3.6-27b-fp8) <small style="font-weight:400; opacity:0.85; font-size:0.78em">— generates AI cleanup summaries</small></span>
+                    <span class="tech-badge-large">Microsoft Teams Adaptive Cards <small style="font-weight:400; opacity:0.85; font-size:0.78em">— rich card notification format</small></span>
+                    <span class="tech-badge-large">Power Automate <small style="font-weight:400; opacity:0.85; font-size:0.78em">— bridges n8n to Teams channel</small></span>
+                    <span class="tech-badge-large">Mailgun SMTP <small style="font-weight:400; opacity:0.85; font-size:0.78em">— sends HTML email reports</small></span>
+                    <span class="tech-badge-large">systemd <small style="font-weight:400; opacity:0.85; font-size:0.78em">— runs Flask as a background service</small></span>
+                    <span class="tech-badge-large">logrotate <small style="font-weight:400; opacity:0.85; font-size:0.78em">— manages &amp; rotates log files</small></span>
+                    <span class="tech-badge-large">AES-256-GCM <small style="font-weight:400; opacity:0.85; font-size:0.78em">— encrypts .env credentials</small></span>
+                    <span class="tech-badge-large">Linux (RHEL) <small style="font-weight:400; opacity:0.85; font-size:0.78em">— server OS for deployment</small></span>
+                </div>
+            </div>
+
+            <div class="screenshots-section">
+                <h2>Screenshots & Demo</h2>
+                <div class="screenshots-grid">
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/pdf_cleanup_workflow.png') }}" alt="n8n Workflow" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Full n8n workflow showing all 11 nodes from Schedule Trigger to Teams/Email outputs.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/pdf_cleanup_email.png') }}" alt="Success Email Report" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Success email with AI Summary, Results table, Disk Usage table, and Files Retained/Deleted by Date.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/pdf_cleanup_teams.png') }}" alt="Teams Adaptive Card" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Microsoft Teams Adaptive Card with the same structured cleanup summary.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/pdf_cleanup_logs.png') }}" alt="Cleanup Evidence Logs" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">PuTTY terminal showing cleanup evidence log with deleted filenames.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/pdf_cleanup_ai_agent.png') }}" alt="n8n AI Agent Node" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">n8n AI Agent node prompt configuration using live data from previous nodes.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/pdf_cleanup_qwen.png') }}" alt="Qwen LLM Output" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">LiteLLM Qwen model node showing input prompt and generated AI summary output.</div>
                     </div>
                 </div>
             </div>
@@ -2000,11 +2674,189 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
         document.addEventListener('click', function(event) {
             const nav = document.getElementById('navLinks');
             const toggle = document.querySelector('.mobile-menu-toggle');
-            
+
             if (!nav.contains(event.target) && !toggle.contains(event.target)) {
                 nav.classList.remove('active');
             }
         });
+
+        /* ============================================================
+           INTERACTION LAYER
+           ============================================================ */
+        (function () {
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            /* ---------- 1. Scroll progress bar ---------- */
+            const bar = document.getElementById('scrollProgress');
+            function updateProgress() {
+                const max = document.documentElement.scrollHeight - window.innerHeight;
+                const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+                bar.style.width = pct + '%';
+            }
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            window.addEventListener('resize', updateProgress);
+            updateProgress();
+
+            /* ---------- 2. Cursor glow (smoothed) ---------- */
+            const glow = document.getElementById('cursorGlow');
+            let gx = window.innerWidth / 2, gy = window.innerHeight / 2, tx = gx, ty = gy;
+            if (!reduced && window.matchMedia('(hover:hover)').matches) {
+                window.addEventListener('mousemove', function (e) {
+                    tx = e.clientX; ty = e.clientY;
+                    glow.classList.add('on');
+                }, { passive: true });
+                (function loop() {
+                    gx += (tx - gx) * 0.12;
+                    gy += (ty - gy) * 0.12;
+                    glow.style.transform = 'translate(' + gx + 'px,' + gy + 'px) translate(-50%,-50%)';
+                    requestAnimationFrame(loop);
+                })();
+            }
+
+            /* ---------- 3. Scroll reveal ---------- */
+            const REVEAL_SEL = [
+                '.hero', '.section', '.project-card', '.skill-card', '.feature-card',
+                '.interest-card', '.contact-card', '.screenshot-item', '.education-card',
+                '.project-overview', '.screenshots-section', '.project-detail-header'
+            ].join(',');
+
+            const io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) {
+                        en.target.classList.add('is-visible');
+                        io.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+            function initReveal(scope) {
+                const els = (scope || document).querySelectorAll(REVEAL_SEL);
+                els.forEach(function (el, i) {
+                    el.classList.add('reveal-target');
+                    el.classList.remove('is-visible');
+                    el.style.transitionDelay = Math.min(i * 50, 340) + 'ms';
+                    io.observe(el);
+                });
+            }
+            initReveal();
+
+            /* Re-run reveal + interactions whenever a tab changes */
+            const originalShowTab = window.showTab;
+            window.showTab = function (event, tabName) {
+                originalShowTab(event, tabName);
+                const panel = document.getElementById(tabName);
+                if (panel) {
+                    initReveal(panel);
+                    wire(panel);
+                }
+                updateProgress();
+            };
+
+            /* ---------- 4. Pointer spotlight + 3D tilt ---------- */
+            const SPOT_SEL = '.skill-card,.feature-card,.contact-card,.project-card,.interest-card';
+            const TILT_SEL = '.project-card,.screenshot-item';
+
+            function wire(scope) {
+                const root = scope || document;
+
+                root.querySelectorAll(SPOT_SEL).forEach(function (el) {
+                    if (el.dataset.spot) return;
+                    el.dataset.spot = '1';
+                    el.addEventListener('mousemove', function (e) {
+                        const r = el.getBoundingClientRect();
+                        el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+                        el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+                    }, { passive: true });
+                });
+
+                if (reduced) return;
+                root.querySelectorAll(TILT_SEL).forEach(function (el) {
+                    if (el.dataset.tilt) return;
+                    el.dataset.tilt = '1';
+                    const MAX = el.classList.contains('project-card') ? 5 : 3;
+                    el.addEventListener('mousemove', function (e) {
+                        const r = el.getBoundingClientRect();
+                        const px = (e.clientX - r.left) / r.width;
+                        const py = (e.clientY - r.top) / r.height;
+                        el.style.transform =
+                            'perspective(1000px) rotateX(' + ((py - 0.5) * -MAX).toFixed(2) + 'deg) ' +
+                            'rotateY(' + ((px - 0.5) * MAX).toFixed(2) + 'deg) translateY(-6px)';
+                    }, { passive: true });
+                    el.addEventListener('mouseleave', function () { el.style.transform = ''; });
+                });
+            }
+            wire();
+
+            /* ---------- 5. Magnetic buttons ---------- */
+            if (!reduced) {
+                document.querySelectorAll('.contact-btn,.cert-btn').forEach(function (btn) {
+                    btn.addEventListener('mousemove', function (e) {
+                        const r = btn.getBoundingClientRect();
+                        const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+                        const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+                        btn.style.transform = 'translate(' + (dx * 9).toFixed(1) + 'px,' + (dy * 9 - 3).toFixed(1) + 'px)';
+                    }, { passive: true });
+                    btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+                });
+            }
+
+            /* ---------- 6. In-page PDF viewer ----------
+               The anchors keep target="_blank" as a no-JS fallback; we
+               intercept the click and render the PDF in an iframe instead. */
+            const modal   = document.getElementById('pdfModal');
+            const frame   = document.getElementById('pdfFrame');
+            const mTitle  = document.getElementById('pdfModalTitle');
+            const mNewTab = document.getElementById('pdfOpenNew');
+
+            function openPdf(url, title) {
+                frame.src = url;
+                mTitle.textContent = title;
+                mNewTab.href = url;
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closePdf() {
+                modal.classList.remove('open');
+                document.body.style.overflow = '';
+                setTimeout(function () { frame.src = 'about:blank'; }, 320);
+            }
+
+            document.querySelectorAll('.cert-btn').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const card = btn.closest('.skill-card');
+                    const head = card ? card.querySelector('h3') : null;
+                    openPdf(btn.getAttribute('href'), head ? head.textContent.trim() : 'Certificate');
+                });
+            });
+            modal.querySelectorAll('[data-close]').forEach(function (el) {
+                el.addEventListener('click', closePdf);
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && modal.classList.contains('open')) closePdf();
+            });
+
+            /* ---------- 7. Hero typing effect ---------- */
+            const h1 = document.querySelector('.hero h1');
+            if (h1 && !reduced) {
+                const full = h1.textContent.trim();
+                h1.textContent = '';
+                const caret = document.createElement('span');
+                caret.className = 'caret';
+                caret.textContent = '_';
+                h1.appendChild(caret);
+                let i = 0;
+                (function type() {
+                    if (i <= full.length) {
+                        caret.insertAdjacentText('beforebegin', full.charAt(i - 1) || '');
+                        i++;
+                        setTimeout(type, 68);
+                    } else {
+                        setTimeout(function () { caret.remove(); }, 1600);
+                    }
+                })();
+            }
+        })();
     </script>
 </body>
 </html>
