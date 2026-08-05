@@ -1297,6 +1297,83 @@ template = """
     }
     .pdf-frame { flex: 1; width: 100%; border: 0; background: #1b1b24; }
 
+    /* ---------- Uniform screenshot grid ----------
+       Every tile is the same size regardless of the source image's aspect
+       ratio. `contain` letterboxes the odd ones out instead of cropping them,
+       and the lightbox below lets you see any of them full size. */
+    .screenshots-grid {
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)) !important;
+        gap: 24px !important;
+    }
+    .screenshot-item {
+        grid-column: auto !important;   /* neutralise the inline "1 / -1" spans */
+        display: flex; flex-direction: column;
+        cursor: zoom-in;
+    }
+    .screenshot-item img {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        display: block !important;
+        border-radius: 0 !important;
+        aspect-ratio: 22 / 10;
+        object-fit: contain;
+        object-position: center;
+        background: #0d0d14;
+    }
+    .screenshot-item .screenshot-caption { flex: 1; }
+
+    /* ---------- Screenshot lightbox ---------- */
+    .img-lightbox {
+        position: fixed; inset: 0; z-index: 6500;
+        display: flex; align-items: center; justify-content: center;
+        padding: 5vh 5vw;
+        opacity: 0; pointer-events: none;
+        transition: opacity .3s ease;
+    }
+    .img-lightbox.open { opacity: 1; pointer-events: auto; }
+    .img-lightbox-backdrop {
+        position: absolute; inset: 0;
+        background: rgba(3,3,7,.9);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .img-lightbox-fig {
+        position: relative; margin: 0;
+        max-width: 100%; max-height: 100%;
+        display: flex; flex-direction: column; gap: 14px;
+        transform: scale(.96); transition: transform .38s cubic-bezier(.16,1,.3,1);
+    }
+    .img-lightbox.open .img-lightbox-fig { transform: none; }
+    .img-lightbox-fig img {
+        max-width: 100%; max-height: 78vh;
+        object-fit: contain;
+        border-radius: 12px;
+        border: 1px solid var(--stroke-2);
+        box-shadow: 0 40px 120px rgba(0,0,0,.85);
+        background: #0d0d14;
+    }
+    .img-lightbox-fig figcaption {
+        text-align: center; color: var(--txt-2);
+        font-size: .92em; line-height: 1.5;
+        max-width: 900px; margin: 0 auto;
+    }
+    .img-lightbox-close {
+        position: absolute; top: 22px; right: 26px;
+        width: 42px; height: 42px;
+        display: grid; place-items: center;
+        border-radius: 11px; cursor: pointer;
+        background: rgba(255,255,255,.07);
+        border: 1px solid var(--stroke);
+        color: var(--txt); font-size: 18px; line-height: 1;
+        transition: background .25s, border-color .25s, transform .25s;
+        z-index: 2;
+    }
+    .img-lightbox-close:hover {
+        background: rgba(139,124,255,.28);
+        border-color: rgba(200,107,255,.6);
+        transform: translateY(-2px);
+    }
+
     /* ---------- Mobile ---------- */
     @media (max-width: 968px) {
         .pdf-modal { padding: 0; }
@@ -1340,6 +1417,16 @@ template = """
         </div>
     </div>
 
+    <!-- Screenshot lightbox -->
+    <div class="img-lightbox" id="imgLightbox" role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+        <div class="img-lightbox-backdrop" data-imgclose></div>
+        <button class="img-lightbox-close" type="button" data-imgclose title="Close (Esc)">✕</button>
+        <figure class="img-lightbox-fig">
+            <img id="imgLightboxImg" src="" alt="">
+            <figcaption id="imgLightboxCap"></figcaption>
+        </figure>
+    </div>
+
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -1363,6 +1450,7 @@ template = """
                         <a href="#" onclick="showTab(event, 'project-face')">Face Authentication System</a>
                         <a href="#" onclick="showTab(event, 'project-portfolio')">Portfolio Tracker</a>
                         <a href="#" onclick="showTab(event, 'project-uci-pdf-cleanup')">PDF Cleanup</a>
+                        <a href="#" onclick="showTab(event, 'project-orchid-msi')">MSI SharePoint Uploader</a>
                     </div>
                 </li>
                 <li><a href="#" class="nav-link" onclick="showTab(event, 'contact')">Contact</a></li>
@@ -1606,7 +1694,9 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <h3>💻 Programming Languages</h3>
                         <ul>
                             <li>Python</li>
+                            <li>SQL (MySQL)</li>
                             <li>JavaScript</li>
+                            <li>Bash / Shell Scripting</li>
                             <li>HTML</li>
                             <li>CSS</li>
                         </ul>
@@ -1630,6 +1720,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                             <li>N8N</li>
                             <li>ManyChats</li>
                             <li>Retell AI</li>
+                            <li>Kubernetes</li>
                             <li>Git</li>
                         </ul>
                     </div>
@@ -1678,7 +1769,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <div class="project-card" onclick="showTab(event, 'project-ami')">
                     <div class="project-header">
                         <h3>WhatsApp-Based Financial Operations Dashboard</h3>
-                        <span class="project-date">Dec 2025 - Present</span>
+                        <span class="project-date">Dec 2025 - Mar 2026</span>
                     </div>
                     <p>Production-grade WhatsApp Cloud API dashboard for AI chatbot monitoring and financial client management.</p>
                     <span class="view-details-btn">View Details →</span>
@@ -1755,6 +1846,15 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                     <p>Reusable automated cleanup system for temporary PDF/Word files across UCI, UAT, and PROD environments — with AI-generated summaries, Teams Adaptive Cards, and email reports via an n8n + Flask REST API pipeline.</p>
                     <span class="view-details-btn">View Details →</span>
                 </div>
+
+                <div class="project-card" onclick="showTab(event, 'project-orchid-msi')">
+                    <div class="project-header">
+                        <h3>Orchid MSI SharePoint Upload Automation</h3>
+                        <span class="project-date">May 2026 - Jul 2026</span>
+                    </div>
+                    <p>End-to-end automation pipeline that polls MySQL for completed MSI batches, transfers files via SFTP, verifies PDFs, and uploads to SharePoint — eliminating daily manual effort entirely.</p>
+                    <span class="view-details-btn">View Details →</span>
+                </div>
             </div>
         </div>
 
@@ -1770,7 +1870,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <div class="project-meta">
                     <div class="project-meta-item">
                         <span>📅</span>
-                        <span>Dec 2025 - Present</span>
+                        <span>Dec 2025 - Mar 2026</span>
                     </div>
                     <div class="project-meta-item">
                         <span>🏢</span>
@@ -2296,6 +2396,10 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <span>🔒</span>
                         <span>Security System</span>
                     </div>
+                    <div class="project-meta-item">
+                        <span>🧑‍💻</span>
+                        <span>Co-developed — team of 2</span>
+                    </div>
                 </div>
             </div>
 
@@ -2570,6 +2674,162 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
             </div>
         </div>
 
+        <!-- Project 10: Orchid MSI SharePoint Upload Automation -->
+        <div id="project-orchid-msi" class="tab-content">
+            <a href="#" class="back-button" onclick="showTab(event, 'projects')">← Back to Projects</a>
+
+            <div class="project-detail-header">
+                <h1>Orchid MSI SharePoint Upload Automation</h1>
+                <p style="font-size: 1.2em; margin-top: 10px;">Fully automated daily document pipeline — from MySQL batch detection to verified SharePoint upload</p>
+                <div class="project-meta">
+                    <div class="project-meta-item">
+                        <span>📅</span>
+                        <span>May 2026 - Jul 2026</span>
+                    </div>
+                    <div class="project-meta-item">
+                        <span>🏢</span>
+                        <span>Production System @ Solartis LLC</span>
+                    </div>
+                    <div class="project-meta-item">
+                        <span>👥</span>
+                        <span>Internal Tool — Technology Team</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-overview">
+                <h2>Project Overview</h2>
+                <p>
+                    Every working day, the Orchid MSI batch process generates a set of policy documents that must be verified
+                    and uploaded to SharePoint before the team can proceed. Previously this was a fully manual workflow — someone
+                    had to watch for the batch to complete, copy the files, check the PDFs, and upload them by hand. I built a
+                    Flask-based automation system that handles the entire pipeline: a Kubernetes CronJob polls MySQL every
+                    5 minutes for up to 4 hours waiting for the batch to reach COMPLETED status, then triggers file transfer,
+                    PDF verification, and a SharePoint upload — sending a detailed HTML email to the team once done.
+                </p>
+                <p>
+                    The system runs as two Kubernetes pods sharing an NFS volume — a persistent web app pod and a daily CronJob
+                    pod. It includes a full admin dashboard with Azure AD SSO (Microsoft 365 login), role-based access control
+                    (admin / user / viewer), a manual trigger button so any user can re-run the pipeline without kubectl access,
+                    and 90-day screenshot retention as upload proof. A JavaScript bookmarklet handles the final SharePoint upload
+                    step directly in the browser, automating folder detection and file deduplication.
+                </p>
+
+                <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Key Features</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>🔄 Automated Batch Detection</h3>
+                        <p>Polls MySQL every 5 minutes for up to 4 hours waiting for COMPLETED status. Sends a fallback alert email with step-by-step manual instructions if the batch never completes.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📂 SFTP File Transfer</h3>
+                        <p>Uses paramiko over SSH to pull today's policy ZIP files from the source server to NFS shared storage, making them available to the web app pod instantly.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔖 SharePoint Bookmarklet</h3>
+                        <p>A JavaScript bookmarklet injected into the SharePoint tab auto-detects the correct upload folder, deduplicates existing files, uploads in sequence, takes a proof screenshot, and reports back to the dashboard.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>✅ PDF Verification</h3>
+                        <p>Checks that all expected PDFs are present and their counts match before any upload is triggered. Verification results are shown per-document on the dashboard and included in the email.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔐 Azure AD SSO &amp; Role-Based Access</h3>
+                        <p>Single sign-on via Microsoft 365 (MSAL). Three roles — admin, user, and viewer — control access to the manual trigger, admin panel, and read-only dashboard views.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>▶ Manual Trigger &amp; 90-Day Proof</h3>
+                        <p>Admins and users can re-run the full file copy + verify + notify pipeline from the dashboard sidebar without any server access. Upload proof screenshots are retained for 90 days.</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
+                <div class="tech-stack-detail">
+                    <span class="tech-badge-large">Python <small style="font-weight:400; opacity:0.85; font-size:0.78em">— DB polling, file ops &amp; email logic</small></span>
+                    <span class="tech-badge-large">Flask <small style="font-weight:400; opacity:0.85; font-size:0.78em">— REST API endpoints &amp; admin dashboard</small></span>
+                    <span class="tech-badge-large">JavaScript <small style="font-weight:400; opacity:0.85; font-size:0.78em">— SharePoint bookmarklet &amp; upload automation</small></span>
+                    <span class="tech-badge-large">Bash <small style="font-weight:400; opacity:0.85; font-size:0.78em">— CronJob orchestration &amp; API calls</small></span>
+                    <span class="tech-badge-large">paramiko <small style="font-weight:400; opacity:0.85; font-size:0.78em">— SSH/SFTP file transfer from source server</small></span>
+                    <span class="tech-badge-large">MSAL <small style="font-weight:400; opacity:0.85; font-size:0.78em">— Azure AD SSO &amp; Microsoft token flow</small></span>
+                    <span class="tech-badge-large">MySQL <small style="font-weight:400; opacity:0.85; font-size:0.78em">— batch COMPLETED status polling</small></span>
+                    <span class="tech-badge-large">Kubernetes <small style="font-weight:400; opacity:0.85; font-size:0.78em">— two-pod deployment with NFS shared volume</small></span>
+                    <span class="tech-badge-large">AES-256-GCM <small style="font-weight:400; opacity:0.85; font-size:0.78em">— credential encryption at rest</small></span>
+                </div>
+            </div>
+
+            <div class="screenshots-section">
+                <h2>Screenshots &amp; Demo</h2>
+                <div class="screenshots-grid">
+
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/msi_email.png') }}" alt="Success notification email" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Success email — sent to the team once PDFs are verified and upload is complete, with a direct link to the dashboard</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_before_file_not_generated.png') }}" alt="Dashboard before files are generated" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Dashboard state while waiting for the batch to reach COMPLETED — polling is active</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_files_generated.png') }}" alt="Dashboard after files are generated" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Files detected and copied — PDF verification results shown per document</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_setup_bookmarklet.png') }}" alt="Bookmarklet setup dialog" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">One-time bookmarklet setup — drag the button into Chrome bookmarks bar to enable SharePoint upload</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_route_to_sharepoint.png') }}" alt="SharePoint routing dialog" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Upload dialog opens SharePoint in a new tab and prompts the user to click the bookmarklet</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_after_triggering_bookmarklet.png') }}" alt="Bookmarklet running upload" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Bookmarklet in action — status overlay shows each file being checked and uploaded in real time</div>
+                    </div>
+
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/msi_app_after_successful_upload.png') }}" alt="Dashboard after successful upload" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Dashboard after a clean upload — green success banner, file count confirmed, local folder deleted automatically</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_file_uploaded_and_scrrenshot_taken.png') }}" alt="File uploaded and screenshot captured" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">SharePoint folder after upload — proof screenshot captured automatically by the bookmarklet</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_screenshot_tab_before_upload_to_sharepoint.png') }}" alt="Screenshots tab" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Screenshots tab — proof screenshots listed by date, retained for 90 days</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_opening_the_screenshot.png') }}" alt="Viewing a proof screenshot" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Proof screenshot preview — full-resolution view of a completed upload for audit or compliance</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_newly_scrrenshot.png') }}" alt="Newly captured screenshot" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Freshly captured screenshot appearing in the gallery immediately after upload completes</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_admin_panel_user_section.png') }}" alt="Admin panel — user management" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Admin panel — manage team members and assign roles (admin / user / viewer)</div>
+                    </div>
+
+                    <div class="screenshot-item">
+                        <img src="{{ url_for('static', filename='images/msi_admin_panel_add_recipient.png') }}" alt="Admin panel — email recipients" style="width:100%; border-radius:14px;">
+                        <div class="screenshot-caption">Admin panel — configure email recipients for success and fallback notifications</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <!-- Contact Tab -->
         <div id="contact" class="tab-content">
             <div class="section">
@@ -2836,7 +3096,41 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 if (e.key === 'Escape' && modal.classList.contains('open')) closePdf();
             });
 
-            /* ---------- 7. Hero typing effect ---------- */
+            /* ---------- 7. Screenshot lightbox ----------
+               Tiles are uniformly sized, so this is how you read the detail.
+               Delegated from document so it covers every tab without rewiring. */
+            const lb     = document.getElementById('imgLightbox');
+            const lbImg  = document.getElementById('imgLightboxImg');
+            const lbCap  = document.getElementById('imgLightboxCap');
+
+            function openLightbox(src, caption, alt) {
+                lbImg.src = src;
+                lbImg.alt = alt || caption || 'Screenshot';
+                lbCap.textContent = caption || '';
+                lb.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeLightbox() {
+                lb.classList.remove('open');
+                document.body.style.overflow = '';
+                setTimeout(function () { lbImg.src = ''; }, 320);
+            }
+
+            document.addEventListener('click', function (e) {
+                const img = e.target.closest ? e.target.closest('.screenshot-item img') : null;
+                if (!img) return;
+                const item = img.closest('.screenshot-item');
+                const cap  = item ? item.querySelector('.screenshot-caption') : null;
+                openLightbox(img.currentSrc || img.src, cap ? cap.textContent.trim() : '', img.alt);
+            });
+            lb.querySelectorAll('[data-imgclose]').forEach(function (el) {
+                el.addEventListener('click', closeLightbox);
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+            });
+
+            /* ---------- 8. Hero typing effect ---------- */
             const h1 = document.querySelector('.hero h1');
             if (h1 && !reduced) {
                 const full = h1.textContent.trim();
