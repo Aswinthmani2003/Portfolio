@@ -21,3 +21,8 @@ Thumbs.db
 
 # Claude Code
 .claude/
+
+# Resume files
+generate_resume.py
+Aswinthmani_Resume_TCS.docx
+Aswinthmani_Resume.docx
