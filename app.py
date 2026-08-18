@@ -1850,7 +1850,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <div class="project-card" onclick="showTab(event, 'project-orchid-msi')">
                     <div class="project-header">
                         <h3>Orchid MSI SharePoint Upload Automation</h3>
-                        <span class="project-date">May 2026 - Jul 2026</span>
+                        <span class="project-date">Jul 2026 - Aug 2026</span>
                     </div>
                     <p>End-to-end automation pipeline that polls MySQL for completed MSI batches, transfers files via SFTP, verifies PDFs, and uploads to SharePoint — eliminating daily manual effort entirely.</p>
                     <span class="view-details-btn">View Details →</span>
@@ -2684,7 +2684,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <div class="project-meta">
                     <div class="project-meta-item">
                         <span>📅</span>
-                        <span>May 2026 - Jul 2026</span>
+                        <span>Jul 2026 - Aug 2026</span>
                     </div>
                     <div class="project-meta-item">
                         <span>🏢</span>
