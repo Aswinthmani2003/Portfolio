@@ -1789,7 +1789,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <h3>Automated SIP Reminder & Client Communication System</h3>
                         <span class="project-date">Nov 2025</span>
                     </div>
-                    <p>Automated WhatsApp-based system to send compliant SIP debit reminders by integrating Zoho CRM, Make.com, and WhatsApp Cloud API.</p>
+                    <p>Automated WhatsApp-based system to send compliant SIP debit reminders by integrating Supabase (PostgreSQL), Make.com, and WhatsApp Cloud API.</p>
                     <span class="view-details-btn">View Details →</span>
                 </div>
                 
@@ -2165,7 +2165,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <div class="features-grid">
                     <div class="feature-card">
                         <h3>🎯 Automated SIP Reminder Scheduling</h3>
-                        <p>Triggers SIP debit reminders (1-day and 2-day prior) based on SIP due dates sourced from Zoho CRM.</p>
+                        <p>Triggers SIP debit reminders (1-day and 2-day prior) based on SIP due dates sourced from Supabase PostgreSQL database.</p>
                     </div>
                     <div class="feature-card">
                         <h3>📊 WhatsApp Utility Message Delivery</h3>
