@@ -1714,6 +1714,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <h3>🔧 Tools & Technologies</h3>
                         <ul>
                             <li>MongoDB</li>
+                            <li>Supabase (PostgreSQL)</li>
                             <li>Selenium</li>
                             <li>Make.com</li>
                             <li>Zoho CRM (Automation, Custom Modules, API Integration)</li>
