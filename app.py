@@ -2158,7 +2158,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
             <div class="project-overview">
                 <h2>Project Overview</h2>
                 <p>
-                    Built an automated SIP reminder and client communication system for a SEBI-registered mutual fund distributor to ensure timely debit notifications and reduce missed SIPs. The system integrates Zoho CRM as the source of truth, orchestrates workflows using Make.com, and delivers compliant utility messages via WhatsApp Cloud API, with fallback email notifications and delivery tracking through Meta WhatsApp Manager.
+                    Built an automated SIP reminder and client communication system for a SEBI-registered mutual fund distributor to ensure timely debit notifications and reduce missed SIPs. The system integrates Supabase (PostgreSQL) as the source of truth, orchestrates workflows using Make.com, and delivers compliant utility messages via WhatsApp Cloud API, with fallback email notifications and delivery tracking through Meta WhatsApp Manager.
                 </p>
                 
                 <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Key Features</h3>
@@ -2176,8 +2176,8 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <p>Delivers SIP reminders via WhatsApp and email simultaneously to ensure timely client awareness.</p>
                     </div>
                     <div class="feature-card">
-                        <h3>🔍 CRM-Driven Workflow Orchestration</h3>
-                        <p>Uses Zoho CRM as the source of truth with Make.com orchestrating scheduling, routing, and message dispatch workflows.</p>
+                        <h3>🗄️ Database-Driven Workflow Orchestration</h3>
+                        <p>Uses Supabase (PostgreSQL) as the source of truth with Make.com orchestrating scheduling, routing, and message dispatch workflows.</p>
                     </div>
                 </div>
 
@@ -2185,7 +2185,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <div class="tech-stack-detail">
                     <span class="tech-badge-large">WhatsApp Cloud API <small style="font-weight:400; opacity:0.85; font-size:0.78em">— delivers SIP reminder messages</small></span>
                     <span class="tech-badge-large">Meta WhatsApp Manager <small style="font-weight:400; opacity:0.85; font-size:0.78em">— template approval &amp; management</small></span>
-                    <span class="tech-badge-large">Zoho CRM <small style="font-weight:400; opacity:0.85; font-size:0.78em">— source of client data</small></span>
+                    <span class="tech-badge-large">Supabase (PostgreSQL) <small style="font-weight:400; opacity:0.85; font-size:0.78em">— source of client data</small></span>
                     <span class="tech-badge-large">Make.com <small style="font-weight:400; opacity:0.85; font-size:0.78em">— orchestrates the full flow</small></span>
                     <span class="tech-badge-large">ManyChats <small style="font-weight:400; opacity:0.85; font-size:0.78em">— earlier version of the WhatsApp flow</small></span>
                     <span class="tech-badge-large">REST APIs &amp; Webhooks <small style="font-weight:400; opacity:0.85; font-size:0.78em">— connects all services</small></span>
@@ -2196,8 +2196,8 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                 <h2>Screenshots & Demo</h2>
                 <div class="screenshots-grid">
                     <div class="screenshot-item" style="grid-column: 1 / -1;">
-                        <img  src="{{ url_for('static', filename='images/r_1.jpg') }}"  alt="Sip Remainder" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
-                        <div class="screenshot-caption">End-to-end workflow orchestrating SIP data retrieval from Zoho CRM and scheduled notification delivery.</div>
+                        <img  src="{{ url_for('static', filename='images/r_1.png') }}"  alt="Sip Remainder" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">End-to-end workflow orchestrating SIP data retrieval from Supabase (PostgreSQL) and scheduled notification delivery.</div>
                     </div>
                     <div class="screenshot-item" style="grid-column: 1 / -1;">
                         <img  src="{{ url_for('static', filename='images/r_2.jpg') }}"  alt="Sip Remainder" style="width:100%; max-width: 1200px; display: block; margin: 0 auto; border-radius:14px;">
