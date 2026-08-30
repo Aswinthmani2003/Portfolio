@@ -1693,66 +1693,74 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                     <div class="skill-card">
                         <h3>💻 Programming Languages</h3>
                         <ul>
-                            <li>Python</li>
-                            <li>SQL (MySQL)</li>
-                            <li>JavaScript</li>
-                            <li>Bash / Shell Scripting</li>
-                            <li>HTML</li>
-                            <li>CSS</li>
+                            <li>Python — 9/10 projects (backend, APIs, automation)</li>
+                            <li>JavaScript — dashboards, bookmarklets, UI interactions</li>
+                            <li>SQL (Basics) — MySQL, Supabase queries</li>
+                            <li>Bash / Shell Scripting — Kubernetes CronJobs, automation</li>
+                            <li>HTML / CSS — frontend markup and styling</li>
                         </ul>
                     </div>
                     <div class="skill-card">
-                        <h3>🛠️ Frameworks & Libraries</h3>
+                        <h3>🛠️ Frameworks & Backend</h3>
                         <ul>
-                            <li>Flask</li>
-                            <li>Streamlit</li>
-                            <li>Bootstrap</li>
-                            <li>Web Scraping</li>
+                            <li>Flask — 5 projects (WhatsApp, FinSight, PDF Cleanup, Face Auth, Portfolio Tracker)</li>
+                            <li>Streamlit — Proposal Generator prototype</li>
+                            <li>Bootstrap — responsive UI (Face Auth, Portfolio Tracker)</li>
+                            <li>REST APIs — designed & deployed across 5+ projects</li>
+                            <li>Web Scraping (Selenium) — YouTube comment scraping</li>
                         </ul>
                     </div>
                     <div class="skill-card">
-                        <h3>🔧 Tools & Technologies</h3>
+                        <h3>🗄️ Databases</h3>
                         <ul>
-                            <li>MongoDB</li>
-                            <li>Supabase (PostgreSQL)</li>
-                            <li>Selenium</li>
-                            <li>Make.com</li>
-                            <li>Zoho CRM (Automation, Custom Modules, API Integration)</li>
-                            <li>N8N</li>
-                            <li>ManyChats</li>
-                            <li>Retell AI</li>
-                            <li>Kubernetes</li>
-                            <li>Git</li>
+                            <li>MongoDB — conversation storage, face encodings</li>
+                            <li>MySQL — batch status polling, complex queries</li>
+                            <li>Supabase (PostgreSQL) — SIP client data, real-time operations</li>
                         </ul>
                     </div>
                     <div class="skill-card">
-                        <h3>🎯 Core Areas</h3>
+                        <h3>🔧 Tools & Automation</h3>
                         <ul>
-                            <li>Data Analysis</li>
-                            <li>Financial Analytics</li>
-                            <li>Machine Learning</li>
-                            <li>Automation</li>
-                            <li>Natural Language Processing</li>
-                            <li>Computer Vision</li>
-                            <li>LLM Integration</li>
+                            <li>Make.com — 3 projects (WhatsApp, SIP, Follow-up orchestration)</li>
+                            <li>n8n — 11-node PDF Cleanup pipeline</li>
+                            <li>Retell AI — AI voice calling for lead qualification</li>
+                            <li>Zoho CRM — automation, custom modules, API integration</li>
+                            <li>Linux (systemd, Cron) — background services, scheduled tasks</li>
+                            <li>SFTP / paramiko — file transfer automation</li>
+                            <li>Git/GitHub — version control (all projects)</li>
                         </ul>
                     </div>
                     <div class="skill-card">
-                        <h3>🤖📊 AI-Driven Data & Analytics</h3>
+                        <h3>🤖 AI, LLMs & Machine Learning</h3>
                         <ul>
-                            <li>Exploratory Data Analysis (EDA)</li>
-                            <li>Financial Data Analysis</li>
-                            <li>LLM Integration & Prompt Engineering</li>
-                            <li>AI-Generated Insight Pipelines</li>
-                            <li>Conversational AI Systems</li>
+                            <li>GPT-4 — WhatsApp chatbot conversations</li>
+                            <li>Groq API + Llama 3.3 — financial insights generation</li>
+                            <li>Qwen LLM — PDF cleanup summaries</li>
+                            <li>LLM Integration & Prompt Engineering — chatbots, multi-turn conversations</li>
+                            <li>NLP & Sentiment Analysis — TextBlob, text classification</li>
+                            <li>Computer Vision — OpenCV, LBPH face recognition</li>
                         </ul>
                     </div>
                     <div class="skill-card">
                         <h3>☁️ Cloud & APIs</h3>
                         <ul>
-                            <li>Google Cloud Platform</li>
-                            <li>WhatsApp Cloud API</li>
-                            <li>RESTful APIs</li>
+                            <li>Google Cloud Platform — Proposal Generator deployment</li>
+                            <li>Google Calendar API — time-zone-aware scheduling</li>
+                            <li>Microsoft Teams API — notifications & integration</li>
+                            <li>WhatsApp Cloud API — message sending/receiving</li>
+                            <li>Meta WhatsApp Manager — template approval</li>
+                            <li>Polygon API — real-time stock market data</li>
+                            <li>Azure AD / MSAL — SharePoint SSO authentication</li>
+                            <li>REST APIs & Webhooks — service integration</li>
+                        </ul>
+                    </div>
+                    <div class="skill-card">
+                        <h3>🔐 Security & Infrastructure</h3>
+                        <ul>
+                            <li>AES-256-GCM Encryption — credential storage</li>
+                            <li>Kubernetes — container orchestration ⚠️ (with DevOps support)</li>
+                            <li>Chart.js — interactive data visualization</li>
+                            <li>ReportLab — PDF generation & reporting</li>
                         </ul>
                     </div>
                 </div>
