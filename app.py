@@ -1451,6 +1451,7 @@ template = """
                         <a href="#" onclick="showTab(event, 'project-portfolio')">Portfolio Tracker</a>
                         <a href="#" onclick="showTab(event, 'project-uci-pdf-cleanup')">PDF Cleanup</a>
                         <a href="#" onclick="showTab(event, 'project-orchid-msi')">MSI SharePoint Uploader</a>
+                        <a href="#" onclick="showTab(event, 'project-knowledge-base-portal')">Knowledge Base Portal</a>
                     </div>
                 </li>
                 <li><a href="#" class="nav-link" onclick="showTab(event, 'contact')">Contact</a></li>
@@ -1695,6 +1696,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <ul>
                             <li>Python</li>
                             <li>JavaScript</li>
+                            <li>TypeScript</li>
                             <li>SQL (Basics)</li>
                             <li>Bash / Shell Scripting</li>
                             <li>HTML / CSS</li>
@@ -1704,6 +1706,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <h3>🛠️ Frameworks & Backend</h3>
                         <ul>
                             <li>Flask</li>
+                            <li>FastAPI</li>
                             <li>Streamlit</li>
                             <li>Bootstrap</li>
                             <li>REST APIs</li>
@@ -1721,6 +1724,7 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                     <div class="skill-card">
                         <h3>🔧 Tools & Automation</h3>
                         <ul>
+                            <li>Docker</li>
                             <li>Make.com</li>
                             <li>n8n</li>
                             <li>Retell AI</li>
@@ -1863,6 +1867,15 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <span class="project-date">Jul 2026 - Aug 2026</span>
                     </div>
                     <p>End-to-end automation pipeline that polls MySQL for completed MSI batches, transfers files via SFTP, verifies PDFs, and uploads to SharePoint — eliminating daily manual effort entirely.</p>
+                    <span class="view-details-btn">View Details →</span>
+                </div>
+
+                <div class="project-card" onclick="showTab(event, 'project-knowledge-base-portal')">
+                    <div class="project-header">
+                        <h3>Knowledge Base Portal</h3>
+                        <span class="project-date">Aug 2026 - Sep 2026</span>
+                    </div>
+                    <p>Secure multi-user enterprise portal built on top of Google NotebookLM Enterprise — with Microsoft Entra SSO, browser automation via MCP + stealth Chromium, role-based access, HMAC-signed artifact delivery, and full audit logging. Deployed live at lore.solartis.net.</p>
                     <span class="view-details-btn">View Details →</span>
                 </div>
             </div>
@@ -2836,6 +2849,116 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <div class="screenshot-caption">Admin panel — configure email recipients for success and fallback notifications</div>
                     </div>
 
+                </div>
+            </div>
+        </div>
+
+        <!-- Project: Knowledge Base Portal -->
+        <div id="project-knowledge-base-portal" class="tab-content">
+            <a href="#" class="back-button" onclick="showTab(event, 'projects')">← Back to Projects</a>
+
+            <div class="project-detail-header">
+                <h1>Knowledge Base Portal</h1>
+                <p style="font-size: 1.2em; margin-top: 10px;">Secure Enterprise AI Knowledge Portal — Solartis LLC</p>
+                <div class="project-meta">
+                    <div class="project-meta-item">
+                        <span>📅</span>
+                        <span>Aug 2026 – Sep 2026</span>
+                    </div>
+                    <div class="project-meta-item">
+                        <span>🏢</span>
+                        <span>Internal Production System</span>
+                    </div>
+                    <div class="project-meta-item">
+                        <span>🔒</span>
+                        <span>Microsoft SSO</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-overview">
+                <h2>Project Overview</h2>
+                <p>
+                    Built a secure, multi-user enterprise portal on top of Google NotebookLM Enterprise that lets employees chat with company knowledge bases using AI — without needing a Google account or direct access to the underlying system.
+                </p>
+                <p>
+                    The portal handles Microsoft (Entra ID) SSO login, drives Google NotebookLM entirely in the background using a dedicated automation account via stealth Chromium browser automation (MCP layer), enforces role-based access, delivers AI-generated audio artifacts with HMAC-signed references, and logs every user action to a full audit trail.
+                </p>
+                <p>
+                    Users see a clean portal UI to chat with assigned knowledge bases and view artifacts. They never interact with the real NotebookLM interface — the backend is the sole security boundary between users and Google's systems.
+                </p>
+
+                <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Key Features</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>🔐 Microsoft SSO</h3>
+                        <p>Employees sign in with corporate Microsoft credentials — no Google account required.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🤖 MCP Browser Automation</h3>
+                        <p>A Node.js MCP server drives stealth Chromium to operate Google NotebookLM entirely in the background on behalf of portal users.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>💬 AI Chat Interface</h3>
+                        <p>Users chat with assigned knowledge bases. AI responses are extracted via a two-phase DOM polling algorithm without any Google API access.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🎵 Artifact Delivery</h3>
+                        <p>Video, Audio, and Slide Deck artifacts delivered via HMAC-signed references — users cannot forge or cross-access artifacts from other notebooks.</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #764ba2; margin-top: 30px; margin-bottom: 15px;">Technologies Used</h3>
+                <div class="tech-stack-detail">
+                    <span class="tech-badge-large">FastAPI (Python 3.11) <small style="font-weight:400; opacity:0.85; font-size:0.78em">— backend &amp; security boundary</small></span>
+                    <span class="tech-badge-large">React + TypeScript <small style="font-weight:400; opacity:0.85; font-size:0.78em">— frontend SPA</small></span>
+                    <span class="tech-badge-large">Patchright / Playwright <small style="font-weight:400; opacity:0.85; font-size:0.78em">— stealth Chromium automation</small></span>
+                    <span class="tech-badge-large">Microsoft SSO <small style="font-weight:400; opacity:0.85; font-size:0.78em">— OIDC/PKCE login</small></span>
+                    <span class="tech-badge-large">Google NotebookLM Enterprise <small style="font-weight:400; opacity:0.85; font-size:0.78em">— underlying AI knowledge base</small></span>
+                    <span class="tech-badge-large">Docker Compose + Nginx <small style="font-weight:400; opacity:0.85; font-size:0.78em">— containerised deployment</small></span>
+                    <span class="tech-badge-large">SQLite <small style="font-weight:400; opacity:0.85; font-size:0.78em">— WAL-mode database</small></span>
+                </div>
+            </div>
+
+            <div class="screenshots-section">
+                <h2>Screenshots & Demo</h2>
+                <div class="screenshots-grid">
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_login.png') }}" alt="Knowledge Base Portal Login" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Login page — employees sign in with Microsoft (Entra ID) SSO. No Google account needed.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_admin_dashboard.png') }}" alt="Admin Dashboard" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Admin dashboard — live system overview showing 11 portal users, 3 registered notebooks, and NotebookLM MCP connection status.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_manage_group.png') }}" alt="Role-Based Access Control" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Role management — Admins and Users managed separately. Role is always read from the database, never from client-supplied data.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_notebook_detail.png') }}" alt="Notebook Detail — Sources and Artifacts" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Notebook detail view — shows assigned users, source documents (read-only from NotebookLM), and Studio artifacts (Video Overviews, Slide Decks, Audio Overviews) available for delivery.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_my_knowledge_base.png') }}" alt="My Knowledge Base — User View" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">User view — employees see only their assigned knowledge bases. The underlying Google NotebookLM interface is never exposed.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_chat.png') }}" alt="AI Chat Interface" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Chat interface — users ask questions and receive AI responses from Gemini 2.5 via NotebookLM. Artifacts (Video, Audio, Slide Deck) are accessible inline on the right panel.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_video_modal.png') }}" alt="Video Overview Playback" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Artifact delivery — Video Overview playing inline via HMAC-signed streaming. Raw Google URLs never leave the server; users only receive signed opaque references.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_notebooks_admin.png') }}" alt="Notebook Discovery and Linking" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Notebook management — admin discovers live notebooks from the authenticated Google account and links them to the portal. Linked notebooks appear in the registered table below.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_system_status.png') }}" alt="System Status — Re-authenticate" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">System Status — shows live MCP connectivity and active sessions. If the Google session expires, admins click "Re-authenticate Now" to log in via noVNC without restarting the server.</div>
+                    </div>
                 </div>
             </div>
         </div>
