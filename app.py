@@ -2948,6 +2948,10 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
                         <div class="screenshot-caption">Chat interface — users ask questions and receive AI responses from Gemini 2.5 via NotebookLM. Artifacts (Video, Audio, Slide Deck) are accessible inline on the right panel.</div>
                     </div>
                     <div class="screenshot-item" style="grid-column: 1 / -1;">
+                        <img src="{{ url_for('static', filename='images/kbp_notebooklm_backend.png') }}" alt="Google NotebookLM — Backend Source" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
+                        <div class="screenshot-caption">Backend — the actual Google NotebookLM Enterprise notebook. The portal fetches AI responses, artifacts, and context directly from here and delivers them securely to the frontend — users never interact with NotebookLM directly.</div>
+                    </div>
+                    <div class="screenshot-item" style="grid-column: 1 / -1;">
                         <img src="{{ url_for('static', filename='images/kbp_video_modal.png') }}" alt="Video Overview Playback" style="width:100%; max-width:1200px; display:block; margin:0 auto; border-radius:14px;">
                         <div class="screenshot-caption">Artifact delivery — Video Overview playing inline via HMAC-signed streaming. Raw Google URLs never leave the server; users only receive signed opaque references.</div>
                     </div>
