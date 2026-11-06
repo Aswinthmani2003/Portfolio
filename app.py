@@ -10,6 +10,18 @@ template = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aswinthmani V - Portfolio</title>
+    <meta name="description" content="AI & Automation Engineer building intelligent automation and backend systems with Python, Flask, LLM integrations, n8n and REST APIs.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Aswinthmani V - AI & Automation Engineer">
+    <meta property="og:description" content="Building intelligent automation & backend systems with Python, Flask, LLM integrations, n8n and REST APIs.">
+    <meta property="og:url" content="https://portfolio-nu-ashen-97.vercel.app/">
+    <meta property="og:image" content="https://portfolio-nu-ashen-97.vercel.app/static/images/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Aswinthmani V - AI & Automation Engineer">
+    <meta name="twitter:description" content="Building intelligent automation & backend systems with Python, Flask, LLM integrations, n8n and REST APIs.">
+    <meta name="twitter:image" content="https://portfolio-nu-ashen-97.vercel.app/static/images/og-image.png">
     <style>
         * {
             margin: 0;
