@@ -325,7 +325,7 @@ template = """
         
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
             gap: 25px;
             margin-top: 25px;
         }
@@ -364,7 +364,7 @@ template = """
         
         .screenshots-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
             gap: 30px;
         }
         
@@ -523,7 +523,7 @@ template = """
         /* Skills Grid */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
             gap: 25px;
             margin-top: 30px;
         }
@@ -646,7 +646,7 @@ template = """
         /* Interests */
         .interests-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
             gap: 20px;
             margin-top: 30px;
         }
@@ -676,7 +676,7 @@ template = """
         /* Contact Page */
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
             gap: 30px;
             margin-top: 30px;
         }
@@ -784,7 +784,9 @@ template = """
                 grid-template-columns: 1fr;
             }
             
-            .section {
+            .section,
+            .screenshots-section,
+            .project-overview {
                 padding: 25px;
             }
             
@@ -1314,7 +1316,7 @@ template = """
        ratio. `contain` letterboxes the odd ones out instead of cropping them,
        and the lightbox below lets you see any of them full size. */
     .screenshots-grid {
-        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)) !important;
+        grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)) !important;
         gap: 24px !important;
     }
     .screenshot-item {
@@ -1451,8 +1453,9 @@ template = """
                 <li><a href="#" class="nav-link" onclick="showTab(event, 'experience')">Experience</a></li>
                 <li><a href="#" class="nav-link" onclick="showTab(event, 'skills')">Skills</a></li>
                 <li class="dropdown">
-                    <a href="#" class="nav-link" onclick="showTab(event, 'projects')">Projects ▾</a>
+                    <a href="#" class="nav-link">Projects ▾</a>
                     <div class="dropdown-content">
+                        <a href="#" onclick="showTab(event, 'projects')">All Projects</a>
                         <a href="#" onclick="showTab(event, 'project-ami')">WhatsApp Financial Dashboard</a>
                         <a href="#" onclick="showTab(event, 'project-quote')">FinSight AI – Intelligent Financial Analysis Platform</a>
                         <a href="#" onclick="showTab(event, 'project-ticket')">Automated SIP Reminder & Client Communication System</a>
@@ -3078,6 +3081,16 @@ from WhatsApp Cloud APIs to CRM-driven decision pipelines.
         function toggleMobileMenu() {
             document.getElementById('navLinks').classList.toggle('active');
         }
+
+        // Projects link: on touch/mobile layouts, open the sub-menu instead of navigating
+        document.querySelector('.dropdown > .nav-link').addEventListener('click', function (event) {
+            if (window.matchMedia('(max-width: 968px)').matches) {
+                event.preventDefault();
+                this.parentElement.classList.toggle('active');
+            } else {
+                showTab(event, 'projects');
+            }
+        });
         
         // Close mobile menu when clicking outside
         document.addEventListener('click', function(event) {
